@@ -1,0 +1,12 @@
+gradio>=4.0.0
+faiss-cpu
+sentence-transformers>=2.2.2
+transformers>=4.30.0
+torch
+scikit-learn
+pandas
+pyyaml
+pytest
+requests
+huggingface-hub
+python-dotenv

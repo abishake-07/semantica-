@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "semantica"
+version = "0.1.0"
+description = "E-commerce semantic search optimization with LLM reranking"
+authors = [{name = "Semantica Team"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "gradio>=4.0.0",
+    "faiss-cpu",
+    "sentence-transformers>=2.2.2",
+    "transformers>=4.30.0",
+    "torch",
+    "scikit-learn",
+    "pandas",
+    "pyyaml",
+    "requests",
+    "huggingface-hub",
+    "python-dotenv",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
