@@ -1,52 +1,115 @@
-E-Commerce Semantic Search Optimization (Semantica)
-===============================================
+# Semantica - E-commerce Semantic Search
 
-Project scaffold for building an LLM-augmented semantic search system for e-commerce.
+A complete e-commerce semantic search system with LLM integration and evaluation metrics.
 
-What's included
-- minimal Python package layout under `src/semantica`
-- FAISS + sentence-transformers embedding wrapper
-- LLM reranker interface (pluggable)
-- Gradio demo app to run queries and show results
-- evaluation metrics utilities
+## 🏗️ Repository Structure
 
-Quick start
-1. Create a Python virtual environment and activate it.
-2. Install dependencies:
+```
+Semantica/
+├── semantica/              # Core library modules
+│   ├── __init__.py        # Package initialization
+│   ├── data_loader.py     # Data loading utilities
+│   ├── embeddings.py      # Embedding models
+│   ├── retriever.py       # Vector search (FAISS)
+│   ├── reranker.py        # LLM reranking
+│   ├── llm_adapters.py    # LLM integrations
+│   └── metrics.py         # Evaluation metrics
+├── scripts/               # Executable scripts
+│   ├── cli.py            # Command-line interface
+│   ├── finetune_clean.py # Model fine-tuning
+│   ├── compare_models.py # Model comparison
+│   └── test_*.py         # Testing scripts
+├── app/                   # Web applications
+│   └── gradio_app.py     # Gradio web interface
+├── data/                  # Data files
+│   ├── sample_products.csv   # Sample product data
+│   └── dataset/          # WANDS dataset
+├── tests/                 # Unit tests
+├── docs/                  # Documentation
+├── models/                # Saved models
+├── .venv/                 # Virtual environment
+├── requirements.txt       # Dependencies
+├── README.md             # This file
+└── .gitignore            # Git ignore rules
+```
+## 🚀 Quick Start
 
-```powershell
+### 1. Setup Environment
+```bash
+# Create virtual environment
+python -m venv .venv
+
+# Activate virtual environment
+# Windows:
+.venv\Scripts\activate
+# Linux/Mac:
+source .venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-If you plan to run tests locally, also install pytest in your environment (included above). If `pytest` is not available in your PATH, run it via the Python -m entry:
-
-```powershell
-python -m pytest -q
+### 2. Run Semantic Search
+```bash
+# From scripts directory
+cd scripts
+python cli.py --csv ../data/sample_products.csv --query "blue lamp for bedroom" --k 5
 ```
 
-3. Prepare dataset (WANDS) and point to its CSV in the Gradio interface.
-4. Run the Gradio demo:
-
-```powershell
-python app/gradio_app.py
+### 3. Compare Models
+```bash
+cd scripts
+python compare_models.py
 ```
 
-LLM integration
-- **Environment File**: Create a `.env` file in the project root with your API tokens:
-  ```
-  HF_API_TOKEN=your_hf_token_here
-  OPENROUTER_API_KEY=your_openrouter_key_here
-  OPENROUTER_URL=your_openrouter_endpoint_here
-  ```
-- **HuggingFace**: The `HF_API_TOKEN` enables LLM reranking using models like Llama3 or Dolly.
-- **OpenRouter**: Configure `OPENROUTER_API_KEY` and `OPENROUTER_URL` for OpenRouter endpoints.
-- **Fallback**: If no LLM is configured, the system automatically falls back to cosine similarity reranking using sentence embeddings.
+### 4. Fine-tune Models
+```bash
+cd scripts
+python finetune_clean.py
+```
 
-Example setup:
-```powershell
-# Create .env file with your token
-echo "HF_API_TOKEN=your_hf_token_here" > .env
-python app/gradio_app.py
+### 5. Web Interface
+```bash
+cd app
+python gradio_app.py
+```
+
+## 📊 Features
+
+- **Semantic Search**: Using sentence-transformers for embeddings
+- **Vector Retrieval**: FAISS for efficient similarity search
+- **LLM Reranking**: Integration with HuggingFace models
+- **Model Comparison**: Compare different embedding models
+- **Fine-tuning**: Adapt models to your specific domain
+- **Evaluation Metrics**: Precision@k, Recall@k, MRR, nDCG
+- **Web Interface**: Gradio-based demo application
+
+## 🛠️ Development
+
+This is now structured as a standard Python repository (not a package) for easy development and experimentation.
+
+### Running Tests
+```bash
+cd tests
+python -m pytest
+```
+
+### Adding New Models
+Add new embedding models in `semantica/embeddings.py` and new LLM adapters in `semantica/llm_adapters.py`.
+
+## 📁 Data Format
+
+Expected CSV format for products:
+```csv
+product_id,title,description,attributes
+1,"Modern Blue Table Lamp","Contemporary table lamp with blue base","color:blue,type:lamp"
+```
+
+## 🔧 Configuration
+
+Create a `.env` file for API keys:
+```env
+HUGGINGFACE_API_TOKEN=your_token_here
 ```
 
 Dataset

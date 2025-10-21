@@ -1,6 +1,11 @@
 import gradio as gr
 import os
+import sys
 import pandas as pd
+
+# Add parent directory to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from dotenv import load_dotenv
 from semantica.data_loader import load_wands_csv
 from semantica.embeddings import EmbeddingModel

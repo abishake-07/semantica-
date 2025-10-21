@@ -9,28 +9,13 @@ __pycache__/
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+*.pyc
 
 # Virtual environments
 .venv/
 venv/
-ENV/
 env/
+ENV/
 .conda/
 
 # IDE and Editors
@@ -83,12 +68,14 @@ vectors/
 *.npy
 *.npz
 
-# Datasets (large files)
-datasets/
-data/
-*.csv.gz
-*.parquet
-*.feather
+# Large dataset files (but keep sample data)
+data/dataset/*.csv
+data/dataset/*.parquet
+data/dataset/*.feather
+data/dataset/*.json
+data/dataset/*.gz
+# Keep sample_products.csv for demos
+!data/sample_products.csv
 
 # Logs
 logs/
@@ -122,3 +109,22 @@ lightning_logs/
 
 # MLflow
 mlruns/
+
+# Semantica-specific
+# Fine-tuned models (keep folder structure)
+models/
+models/*.pt
+models/*.pth
+models/*.safetensors
+models/**/pytorch_model.bin
+models/**/config.json
+models/**/tokenizer*
+!models/.gitkeep
+
+# Generated comparison results
+scripts/model_comparison_*.txt
+scripts/finetune_results_*.json
+
+# Temporary download files
+*.downloading
+*.tmp.*

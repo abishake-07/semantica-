@@ -1,12 +1,17 @@
-gradio>=4.0.0
-faiss-cpu
+# Core dependencies for Semantica e-commerce search
 sentence-transformers>=2.2.2
 transformers>=4.30.0
 torch
+faiss-cpu
 scikit-learn
 pandas
-pyyaml
+numpy
+python-dotenv
+
+# Web interface
+gradio>=4.0.0
+
+# Development and testing
 pytest
 requests
 huggingface-hub
-python-dotenv
