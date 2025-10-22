@@ -69,20 +69,49 @@ python finetune_clean.py
 ```
 
 ### 5. Web Interface
+
+**Basic Interface:**
 ```bash
 cd app
 python gradio_app.py
 ```
 
+**Enhanced Interface with Evaluation:**
+```bash
+python launch_enhanced_app.py
+```
+
+**Features:**
+- 🔍 **Search Tab**: Product search with model selection
+- 📊 **Evaluation Tab**: Model benchmarking and comparison  
+- 🔥 **Fine-tuning Tab**: Training integration and progress
+- 📈 **Performance Metrics**: Real-time model assessment
+
 ## 📊 Features
 
+### Core Search Capabilities
 - **Semantic Search**: Using sentence-transformers for embeddings
 - **Vector Retrieval**: FAISS for efficient similarity search
 - **LLM Reranking**: Integration with HuggingFace models
-- **Model Comparison**: Compare different embedding models
-- **Fine-tuning**: Adapt models to your specific domain
-- **Evaluation Metrics**: Precision@k, Recall@k, MRR, nDCG
-- **Web Interface**: Gradio-based demo application
+- **Multi-Model Support**: Original and fine-tuned model selection
+
+### Evaluation & Benchmarking
+- **WANDS Dataset Evaluation**: nDCG@k, MRR, Recall@k, Precision@k
+- **Industry Benchmarks**: Semantic similarity, clustering, retrieval
+- **Speed Testing**: Encoding throughput and latency measurement
+- **Model Comparison**: Side-by-side performance analysis
+
+### Fine-tuning & Training
+- **GPU Acceleration**: CUDA-enabled PyTorch training
+- **Multiple Training Modes**: Quick test, half-dataset, full-dataset
+- **Progress Monitoring**: Real-time training metrics
+- **Model Versioning**: Automatic timestamped model saving
+
+### Web Interface
+- **Search Interface**: Interactive product search
+- **Evaluation Dashboard**: Real-time benchmarking results
+- **Training Integration**: Fine-tuning progress and controls
+- **Model Management**: Easy switching between models
 
 ## 🛠️ Development
 

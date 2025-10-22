@@ -210,11 +210,27 @@ def finetune_model(model_name, examples, epochs, batch_size, learning_rate, outp
     
     print(f"🔥 Fine-tuning {model_name} for {epochs} epochs...")
     
-    # Load model
-    model = SentenceTransformer(model_name)
+    # Detect and configure device
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"🖥️  Using device: {device}")
+    if torch.cuda.is_available():
+        print(f"   GPU: {torch.cuda.get_device_name(0)}")
+        print(f"   Memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f}GB")
     
-    # Prepare training
-    dataloader = DataLoader(examples, shuffle=True, batch_size=batch_size)
+    # Load model
+    model = SentenceTransformer(model_name, device=device)
+    
+    # Create DataLoader with proper collate function for InputExample objects
+    def collate_fn(batch):
+        """Custom collate function for InputExample objects"""
+        return batch  # Return as-is, sentence-transformers will handle internally
+    
+    dataloader = DataLoader(
+        examples, 
+        shuffle=True, 
+        batch_size=batch_size,
+        collate_fn=collate_fn
+    )
     loss_fn = losses.CosineSimilarityLoss(model)
     
     # Output path with timestamp
@@ -224,58 +240,35 @@ def finetune_model(model_name, examples, epochs, batch_size, learning_rate, outp
     start_time = time.time()
     
     try:
-        # Use sentence-transformers fit method (now that datasets is available)
+        # Use sentence-transformers fit method with optimized settings
         print("✅ Using sentence-transformers fit method with datasets library")
+        
+        # Configure training arguments based on device
+        training_args = {
+            "output_path": output_path,
+            "epochs": epochs,
+            "warmup_steps": int(len(dataloader) * 0.1),
+            "show_progress_bar": True,
+            "save_best_model": True
+        }
+        
+        # Add GPU-specific optimizations
+        if torch.cuda.is_available():
+            training_args.update({
+                "use_amp": True,  # Automatic mixed precision for faster training
+            })
+            print("   🚀 GPU optimizations enabled (mixed precision)")
+        else:
+            print("   💻 CPU training enabled")
+        
         model.fit(
             train_objectives=[(dataloader, loss_fn)],
-            epochs=epochs,
-            warmup_steps=int(len(dataloader) * 0.1),
-            output_path=output_path,
-            show_progress_bar=True,
-            save_best_model=True
+            **training_args
         )
         
     except Exception as e:
-        print(f"⚠️  Fit method failed ({e}), using manual training loop")
-        
-        # Manual training loop - process InputExamples properly
-        model.train()
-        optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
-        
-        for epoch in range(epochs):
-            total_loss = 0
-            print(f"📈 Epoch {epoch + 1}/{epochs}")
-            
-            for batch_idx, batch in enumerate(dataloader):
-                optimizer.zero_grad()
-                
-                # Process InputExamples into features
-                sentence_features = []
-                labels = []
-                
-                for example in batch:
-                    # Convert InputExample to features
-                    texts = example.texts
-                    features = [model.tokenize(text) for text in texts]
-                    sentence_features.extend(features)
-                    labels.append(example.label)
-                
-                # Convert labels to tensor
-                labels = torch.tensor(labels, dtype=torch.float)
-                
-                # Compute loss
-                loss = loss_fn(sentence_features, labels)
-                loss.backward()
-                optimizer.step()
-                total_loss += loss.item()
-                
-                if batch_idx % 50 == 0:
-                    print(f"  Batch {batch_idx}: {loss.item():.4f}")
-            
-            avg_loss = total_loss / len(dataloader)
-            print(f"  Average loss: {avg_loss:.4f}")
-        
-        model.save(output_path)
+        print(f"❌ Training failed: {e}")
+        raise e
     
     training_time = time.time() - start_time
     print(f"✅ Training complete in {training_time/60:.1f}min - {output_path}")
